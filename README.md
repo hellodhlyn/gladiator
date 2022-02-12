@@ -10,5 +10,5 @@ See [get started guide](https://developers.cloudflare.com/workers/get-started/gu
 yarn global add @cloudflare/wrangler
 
 wrangler login
-wrangler init <name> https://github.com/hellodhlyn/cloudflare-worker-template
+wrangler generate <name> https://github.com/hellodhlyn/cloudflare-worker-template
 ```
