@@ -11,7 +11,16 @@ const responseInit: ResponseInit = {
 };
 
 async function handleRequest(request: Request) {
+  // GET /ping
   const { pathname } = new URL(request.url);
+  if (pathname === "/ping") {
+    return new Response("pong");
+  }
+
+  const apiKey = request.headers.get("X-Api-Key");
+  if (apiKey !== AUTH_API_KEY) {
+    return new Response("unauthorized", { status: 401 });
+  }
 
   // GET /v1/images
   if (pathname === "/v1/images" && request.method === "GET") {
@@ -27,9 +36,5 @@ async function handleRequest(request: Request) {
     }
   }
 
-  // GET /ping
-  else if (pathname === "/ping") {
-    return new Response("pong");
-  }
   return new Response("not found", { status: 404 });
 }
