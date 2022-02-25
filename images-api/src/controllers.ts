@@ -11,12 +11,12 @@ export async function listAllImages(): Promise<Image[]> {
   const response = await requestGet("/images/v1");
   const images = (await response.json<CFResponse<{ images: CFImage[] }>>()).result.images;
   return images
-    .filter((i) => i.metadata && (i.metadata[serviceIdKey] === serviceIdValue))
+    .filter((i) => i.meta && (i.meta[serviceIdKey] === serviceIdValue))
     .map((i) => ({
       id: i.id,
-      uploaderID: i.metadata["uploaderID"],
-      thumbnailURL: i.variants.thumbnail,
-      originalURL: i.variants.original,
+      uploaderID: i.meta["uploaderID"],
+      publicURL: i.variants.filter((i) => i.endsWith("/public"))[0],
+      thumbnailURL: i.variants.filter((i) => i.endsWith("/thumbnail"))[0],
     }));
 }
 
@@ -27,7 +27,7 @@ export async function generateUploadUrl(request: Request): Promise<UploadURL> {
   }
 
   const response = await requestPost("/images/v2/direct_upload", {
-    requireSignedURLs: true,
+    requireSignedURLs: false,
     metadata: JSON.stringify({
       [serviceIdKey]: serviceIdValue,
       [uploaderIdKey]: body.uploaderID,

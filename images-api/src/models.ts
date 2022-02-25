@@ -1,8 +1,8 @@
 export type Image = {
   id: string;
   uploaderID: string;
+  publicURL: string;
   thumbnailURL: string;
-  originalURL: string;
 };
 
 export type UploadURL = {

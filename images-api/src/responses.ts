@@ -1,13 +1,9 @@
 export type CFImage = {
   id: string;
   filename: string;
-  metadata: object;
+  meta: object;
   requireSignedURLs: { [_: string]: string };
-  variants: {
-    thumbnail: string;
-    hero: string;
-    original: string;
-  };
+  variants: string[];
   uploaded: string;
 };
 
