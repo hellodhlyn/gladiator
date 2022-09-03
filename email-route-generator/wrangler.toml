@@ -1,0 +1,8 @@
+name = "email-route-generator"
+main = "src/index.ts"
+compatibility_date = "2022-09-03"
+
+# [secrets]
+# CF_ACCOUNT_ID
+# CF_ZONE_ID
+# CF_AUTH_KEY

@@ -1,5 +1,5 @@
 .idea
 .code
 
-**/wrangler.toml
+**/node_modules/
 **/.cargo-ok
