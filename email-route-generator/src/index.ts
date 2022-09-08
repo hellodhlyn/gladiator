@@ -13,8 +13,15 @@ export interface Env {
 const CF_API_HOST = "https://api.cloudflare.com";
 const EMAIL_EXPIRE_HOURS = 24;
 const RATE_LIMIT_HOURS = 24;
-const RATE_LIMIT_COUNT = 1;
+const RATE_LIMIT_COUNT = 5;
 const DURATION_HOUR = 60 * 60 * 1000;
+
+const CORS_HEADERS = {
+	"Access-Control-Allow-Origin": "*",
+	"Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
+	"Access-Control-Allow-Headers": "*",
+	"Access-Control-Max-Age": "86400",
+};
 
 async function generateAddress(request: Request, env: Env): Promise<Response> {
 	const address = `contact_${Math.random().toString(36).slice(-6)}@lynlab.co.kr`;
@@ -40,7 +47,7 @@ async function generateAddress(request: Request, env: Env): Promise<Response> {
 
 	if (res.status >= 300) {
 		console.log(await res.text());
-		return new Response("internal error", { status: 500 });
+		return new Response("internal error", { status: 500, headers: CORS_HEADERS });
 	}
 
 	const result = {
@@ -49,6 +56,7 @@ async function generateAddress(request: Request, env: Env): Promise<Response> {
 	};
 	return new Response(JSON.stringify(result), {
 		headers: {
+			...CORS_HEADERS,
 			"Content-Type": "application/json",
 		},
 	});
@@ -70,11 +78,14 @@ async function rateLimit(request: Request, env: Env): Promise<boolean> {
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const { pathname } = new URL(request.url);
-		if (request.method !== "POST" || pathname !== "/generate") {
-			return new Response("not found", { status: 404 });
+		if (request.method === "OPTIONS") {
+			return new Response(null, { headers: CORS_HEADERS });
+		} else if (request.method !== "POST" || pathname !== "/generate") {
+			return new Response("not found", { status: 404, headers: CORS_HEADERS });
 		}
+
 		if (!await rateLimit(request, env)) {
-			return new Response("too many requests", { status: 429 });
+			return new Response("too many requests", { status: 429, headers: CORS_HEADERS });
 		}
 
 		return generateAddress(request, env);
