@@ -6,3 +6,8 @@ compatibility_date = "2022-09-03"
 # CF_ACCOUNT_ID
 # CF_ZONE_ID
 # CF_AUTH_KEY
+
+[[kv_namespaces]]
+  binding = "RATE_LIMITS"
+  id = "bd1bf85eab2142d1aebc6800df6ebe7b"
+  preview_id = "b0703eff1918470880a913792a55f6dd"
