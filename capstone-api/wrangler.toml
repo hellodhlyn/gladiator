@@ -1,0 +1,11 @@
+name = "capstone-api"
+main = "src/index.ts"
+compatibility_date = "2022-09-29"
+
+# [secrets]
+# GOOGLE_API_KEY
+
+[[kv_namespaces]]
+  binding = "CAPSTONE_DATA"
+  id = "9edd6884e1f44658939ed865949a597e"
+  preview_id = "9edd6884e1f44658939ed865949a597e"
