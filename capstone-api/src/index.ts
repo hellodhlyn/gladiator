@@ -10,11 +10,11 @@ export interface Env {
 
 type Building = {
 	name: string;
-	hehight: number | null;
+	height: number | null;
 	coordinates: {
 		lat: number;
 		lng: number;
-		height: number | null;
+		alt: number | null;
 	}[];
 };
 
@@ -31,7 +31,7 @@ function roundCoord(coord: number): number {
 }
 
 async function fillHeights(originalData: Building[], env: Env): Promise<Building[]> {
-	const coordsToFill = originalData.flatMap((building) => building.coordinates.filter((coord) => !coord.height));
+	const coordsToFill = originalData.flatMap((building) => building.coordinates.filter((coord) => !coord.alt));
 	let elevations: ElevationResult[] = [];
 	if (coordsToFill.length > 0) {
 		elevations = (await getElevations(coordsToFill, env.GOOGLE_API_KEY)).results;
@@ -40,15 +40,14 @@ async function fillHeights(originalData: Building[], env: Env): Promise<Building
 	return originalData.map((building) => ({
 		...building,
 		coordinates: building.coordinates.map((coord) => {
-			if (coord.height) {
+			if (coord.alt) {
 				return coord;
 			}
 			return {
 				lat: coord.lat,
 				lng: coord.lng,
-				height: elevations.find((e) => (
-					roundCoord(e.location.lat) === roundCoord(coord.lat) &&
-					  roundCoord(e.location.lng) === roundCoord(coord.lng))
+				alt: elevations.find((e) => (
+					roundCoord(e.location.lat) === roundCoord(coord.lat) &&	roundCoord(e.location.lng) === roundCoord(coord.lng))
 				)?.elevation || null,
 			};
 		}),
