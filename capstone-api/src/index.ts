@@ -10,6 +10,7 @@ export interface Env {
 
 type Building = {
 	name: string;
+	hehight: number | null;
 	coordinates: {
 		lat: number;
 		lng: number;
@@ -37,7 +38,7 @@ async function fillHeights(originalData: Building[], env: Env): Promise<Building
 	}
 
 	return originalData.map((building) => ({
-		name: building.name,
+		...building,
 		coordinates: building.coordinates.map((coord) => {
 			if (coord.height) {
 				return coord;
