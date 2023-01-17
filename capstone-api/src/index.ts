@@ -19,6 +19,7 @@ type Building = {
 };
 
 const BUILDINGS_DATA_KEY = "capstone.buildings";
+const ROUTE_DATA_KEY = "capstone.route";
 const CORS_HEADERS = {
 	"Access-Control-Allow-Origin": "*",
 	"Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
@@ -77,6 +78,15 @@ async function getBuildings(request: Request, env: Env): Promise<Response> {
 	});
 }
 
+async function getRoute(request: Request, env: Env): Promise<Response> {
+	return new Response(await env.CAPSTONE_DATA.get(ROUTE_DATA_KEY), {
+		headers: {
+			...CORS_HEADERS,
+			"Content-Type": "application/json",
+		},
+	});
+}
+
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		const { pathname } = new URL(request.url);
@@ -86,6 +96,8 @@ export default {
 			return storeBuildings(request, env);
 		} else if (request.method === "GET" && pathname === "/buildings.json") {
 			return getBuildings(request, env);
+		} else if (request.method === "GET" && pathname === "/route.json") {
+			return getRoute(request, env);
 		} else {
 			return new Response(null, { status: 400 });
 		}
